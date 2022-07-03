@@ -1,30 +1,32 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <router-view v-slot="{ Component, route }">
+    <transition :name="route.meta.transitionName">
+      <component :is="Component" />
+    </transition>
+  </router-view>
 </template>
 
+<script>
+
+export default {
+  name: 'App',
+  components: {
+
+  }
+}
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+.down-enter-active,.down-leave-active{
+  transform: translate3d(0,0,0);
+  opacity: 1;
 }
-
-nav {
-  padding: 30px;
+.down-enter-from{
+  transform: translate3d(0,-50%,0);
+  opacity: 0.2;
 }
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+.down-leave-to{
+  transform: translate3d(0,50%,0);
+  opacity: 0.2;
 }
 </style>
