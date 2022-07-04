@@ -1,5 +1,5 @@
 <template>
-  <a-table :columns="tableColumns" :data-source="tableData" bordered>
+  <a-table :columns="columns" :data-source="dataSource" bordered>
     <template #name="{ text }">
       <a>{{ text }}</a>
     </template>
@@ -29,9 +29,14 @@
     </template>
   </a-table>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import {SmileOutlined} from '@ant-design/icons-vue'
-import {defineComponent, reactive, toRefs, onMounted, PropType} from 'vue'
+import {defineEmits, reactive, toRefs, PropType, ref, watch, withDefaults, defineProps, computed, nextTick, onMounted} from 'vue'
+
+export interface Model {
+  columns?: Array<ColumnType>,
+  dataSource?: Array<any>,
+}
 
 export interface ColumnType {
   title?: string,
@@ -39,11 +44,8 @@ export interface ColumnType {
   slots?: object
 }
 
-export default defineComponent({
-  props: {
-    columns: {
-      type: Array as PropType<ColumnType>,
-      default: () => [
+const props = withDefaults(defineProps<Model>(), {
+  columns: () => [
         {
           dataIndex: 'name',
           key: 'name',
@@ -63,77 +65,46 @@ export default defineComponent({
           slots: {customRender: 'tags'}
         }
       ],
+  dataSource: () => [
+    {
+      key: '1',
+      name: 'John Brown',
+      age: 32,
+      address: 'New York No. 1 Lake Park',
+      tags: ['nice', 'developer']
     },
-    dataSource: {
-      type: Array,
-      default: () => [
-        {
-          key: '1',
-          name: 'John Brown',
-          age: 32,
-          address: 'New York No. 1 Lake Park',
-          tags: ['nice', 'developer']
-        },
-        {
-          key: '2',
-          name: 'Jim Green',
-          age: 42,
-          address: 'London No. 1 Lake Park',
-          tags: ['loser']
-        },
-        {
-          key: '3',
-          name: 'Joe Black',
-          age: 32,
-          address: 'Sidney No. 1 Lake Park',
-          tags: ['cool', 'teacher']
-        }
-      ]
+    {
+      key: '2',
+      name: 'Jim Green',
+      age: 42,
+      address: 'London No. 1 Lake Park',
+      tags: ['loser']
+    },
+    {
+      key: '3',
+      name: 'Joe Black',
+      age: 32,
+      address: 'Sidney No. 1 Lake Park',
+      tags: ['cool', 'teacher']
     }
-  },
-  setup: function (props) {
-    const handler = (key: string) => {
-      console.log(key)
-    }
+  ]
+})
 
+const {columns, dataSource} = toRefs(props)
 
-    const applyColumns: Array<ColumnType> = [{
-      title: '申请单号',
-      dataIndex: 'applyNo'
-    }]
+const emits = defineEmits<{
+  (e: 'selected'): void
+}>()
+const numberRef = ref(0)
+const number = computed(() => numberRef.value)
+onMounted(() => {
+  console.log(111)
+})
+watch(numberRef, () => {
+  console.log(`111`)
+})
 
-    const processColumns: Array<ColumnType> = [
-      {
-        title: '流程状态',
-        dataIndex: 'processState'
-      },
-      {
-        title: '发起人',
-        dataIndex: 'startUser'
-      },
-      {
-        title: '发起时间',
-        dataIndex: 'startTime'
-      },
-      {
-        title: 'Action',
-        slots: {customRender: 'action'}
-      }
-    ]
-    const newColumns: Array<ColumnType>  = applyColumns.concat(props.columns).concat(processColumns)
-
-
-    const defaultColumns = reactive({
-      tableColumns: newColumns,
-      tableData: props.dataSource
-    })
-    return {
-      handler,
-      ...toRefs(defaultColumns)
-    }
-  },
-  components: {
-    SmileOutlined
-  },
-});
+nextTick(() => {
+  console.log(111)
+})
 </script>
