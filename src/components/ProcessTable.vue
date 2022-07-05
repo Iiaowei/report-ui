@@ -31,11 +31,23 @@
 </template>
 <script lang="ts" setup>
 import {SmileOutlined} from '@ant-design/icons-vue'
-import {defineEmits, reactive, toRefs, PropType, ref, watch, withDefaults, defineProps, computed, nextTick, onMounted} from 'vue'
+import {
+  defineEmits,
+  reactive,
+  toRefs,
+  PropType,
+  ref,
+  watch,
+  withDefaults,
+  defineProps,
+  computed,
+  nextTick,
+  onMounted
+} from 'vue'
 
 export interface Model {
-  columns?: Array<ColumnType>,
-  dataSource?: Array<any>,
+  columns?: Array<object>,
+  dataSource?: object[],
 }
 
 export interface ColumnType {
@@ -46,25 +58,29 @@ export interface ColumnType {
 
 const props = withDefaults(defineProps<Model>(), {
   columns: () => [
-        {
-          dataIndex: 'name',
-          key: 'name',
-          slots: {title: 'customTitle', customRender: 'name'}
-        },
-        {
-          title: 'Age',
-          dataIndex: 'age'
-        },
-        {
-          title: 'Address',
-          dataIndex: 'address'
-        },
-        {
-          title: 'Tags',
-          dataIndex: 'tags',
-          slots: {customRender: 'tags'}
-        }
-      ],
+    {
+      dataIndex: 'name',
+      key: 'name',
+      slots: {title: 'customTitle', customRender: 'name'}
+    },
+    {
+      title: 'Age',
+      dataIndex: 'age'
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address'
+    },
+    {
+      title: 'Tags',
+      dataIndex: 'tags',
+      slots: {customRender: 'tags'}
+    },
+    {
+      title: 'Action',
+      slots: {customRender: 'action'}
+    }
+  ],
   dataSource: () => [
     {
       key: '1',
@@ -97,6 +113,10 @@ const emits = defineEmits<{
 }>()
 const numberRef = ref(0)
 const number = computed(() => numberRef.value)
+
+const handler = (key: string) => {
+  console.log(key);
+}
 onMounted(() => {
   console.log(111)
 })
